@@ -1,6 +1,8 @@
 # esos
 A simple but scalable sun-surface-sensor model to map per-pixel field-of-view proportions. The model was built for ECOSTRESS, but is fundamentally sensor agnostic.
 
+![image](./example_data/explanatoryplot.png)
+
 ## Inputs
 
 ### Rasters:
@@ -22,7 +24,7 @@ This file contains all parameters and flags read by the model. In many cases, th
 - max_height, int: the maximum height of objects in the DSM
 - thresh, int: the minimum height that you want to consider in the model 
 - metadata, str: relative path for the image metadata
---- the image metadata file should be a .csv file with the following columns view_zenith, view_azimuth, solar_zenith, and solar_azimuth columns
+> the image metadata file should be a .csv file with the following columns view_zenith, view_azimuth, solar_zenith, and solar_azimuth columns
 - dsm, str: relative path to the DSM
 - basepath, str: working directory
 - buildings_only, str: do you want to only run on pixels classified as building? (yes or no)
