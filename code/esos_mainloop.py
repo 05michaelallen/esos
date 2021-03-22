@@ -13,7 +13,6 @@ import rasterio.crs
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.colors
 import os
 from datetime import datetime
 
@@ -25,7 +24,8 @@ print("start: " + str(datetime.now().time()))
 
 ### parameters
 # parameters are read in from a .csv in the parameter_files directory and populated below
-parameters = pd.read_csv("/media/vegveg/scratch1/ssse_ecostress/parameter_files/nyc_view_seen_02192021.csv")
+parametersfn = input("input path to parameter file, e.g. /path/to/file.csv: \n")
+parameters = pd.read_csv(parametersfn)
 
 # model settings
 city = parameters[parameters['param'] == 'city']['setting'].item()
@@ -335,7 +335,7 @@ for f in range(len(meta)):
     print("exit loop: " + str(datetime.now().time()))
 
     # 8) output
-    with rio.open("./data/shadeseen_output/" + outfn + ".tif", 'w', **metaout) as dst:
+    with rio.open("./example_data/shadeseen_output/" + outfn + ".tif", 'w', **metaout) as dst:
         dst.write(shade_matrix_filt[None,:,:])
 
 # =============================================================================
@@ -344,18 +344,12 @@ for f in range(len(meta)):
     if plot == 'no':
         continue
     else:
-        # create colormap
-        colors = ['0.9','dodgerblue']
-        cmap = matplotlib.colors.LinearSegmentedColormap.from_list("", colors, 2)
-        
         # plot
         fig, [ax1, ax0] = plt.subplots(2, 1)
         
-        p0 = ax0.imshow(shade_matrix_filt[5660:5780, 5580:5740], vmin = 0, vmax = 1, cmap = cmap)
-        cb0 = plt.colorbar(p0, ax = ax0, ticks = [0.25, 0.75])
-        #cb0.ax.set_yticklabels(["Sunlit", "Shaded"]) # for sun
-        cb0.ax.set_yticklabels([tag0, tag1])
-        p1 = ax1.imshow(larf[5660:5780, 5580:5740], vmin = 0, vmax = 45)
+        p0 = ax0.imshow(shade_matrix_filt)
+        cb0 = plt.colorbar(p0, ax = ax0)
+        p1 = ax1.imshow(larf, vmin = 0, vmax = 45)
         ax1.text(0.03, 
              1.03, 
              "elev: " + str(round(vz_eij, 1)) + ", azim: " + str(round(vaij, 1)) + ", time: " + str(meta['hourpst'][f]) + ":" + str(meta['minute'][f]),
@@ -364,6 +358,5 @@ for f in range(len(meta)):
              c = '0',
              transform = ax1.transAxes)
         plt.colorbar(p1, ax = ax1, label = "Height Above Ground, m")
-        
         plt.tight_layout()
         plt.savefig("../plots/" + outfn + ".png", dpi = 500)
