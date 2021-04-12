@@ -207,8 +207,8 @@ for f in range(len(meta)):
          
     ### enter loop
     print("enter loop: " + str(datetime.now().time()))
-    for i in range(10, lar.shape[0]-10):
-        for j in range(10, lar.shape[1]-10):
+    for i in range(20, lar.shape[0]-20):
+        for j in range(20, lar.shape[1]-20):
             z = lar[i,j] # get the height of a pixel
             # calculate shade for surrounding pixels as a function of
             # - va, vz, z
