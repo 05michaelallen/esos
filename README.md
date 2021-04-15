@@ -1,5 +1,10 @@
 # esos
-A simple but scalable sun-surface-sensor model to map per-pixel field-of-view proportions. The model was built for ECOSTRESS, but is fundamentally sensor agnostic.
+A simple but scalable sun-surface-sensor model to map per-pixel field-of-view proportions. The model was built for ECOSTRESS, but is fundamentally sensor agnostic. 
+
+# Setup: 
+1. Load DSM and Cover rasters into /example_data/ directory
+2. Modify parameter_file.csv
+3. Run esos_mainloop.py from the command line. Parameters and data are read automatically.
 
 ![link](./example_data/explanatoryplot.jpg)
 
