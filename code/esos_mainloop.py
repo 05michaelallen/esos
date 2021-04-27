@@ -17,6 +17,54 @@ import os
 from datetime import datetime
 
 # =============================================================================
+# functions
+# =============================================================================
+def plotter(matrix, dsm, outfn, va, vz, hour = np.nan, minute = np.nan, dpi = 600):
+    '''
+    
+
+    Parameters
+    ----------
+    matrix : numpy matrix
+        Shade Matrix
+    dsm : numpy matrix
+        Rasterized DSM
+    outfn : str
+        output filepath
+    va : float
+        View/Solar azimuth angle
+    vz : float
+        View/Solar zenith angle
+    hour : int
+        Hour of overpass (for labeling)
+    minute : TYPE
+        Minute of overpass (for labeling)
+    dpi : int
+        output dpi
+
+    Returns
+    -------
+    Outputs a .png multiplot with seen/obscured pixels and the reference dsm.
+
+    '''
+    fig, [ax1, ax0] = plt.subplots(2, 1, sharex = True, figsize = [4.5, 6])
+        
+    p0 = ax0.imshow(matrix)
+    p1 = ax1.imshow(dsm, vmin = 0)
+    ax1.text(0.03, 
+             1.03, 
+             "elev: " + str(round(vz, 1)) + ", azim: " + str(round(va, 1)),
+             va = "bottom",
+             ha = "left", 
+             c = '0',
+             transform = ax1.transAxes)
+    plt.colorbar(p1, ax = ax1, label = "Height Above Ground, m")
+    plt.colorbar(p0, ax = ax0, label = "Tagged Pixels")
+    plt.tight_layout()
+    plt.savefig("./plots/" + outfn + ".png", dpi = dpi)
+
+
+# =============================================================================
 # bring in and prep data
 # =============================================================================
 # start time
@@ -295,7 +343,8 @@ for f in range(len(meta)):
                 if (len(vi) == 0) and (len(vj) == 0):
                     sm_shade_line = sm_shade_line
                 else:
-                    sm_shade_line = sm_shade_line[:min(vi), :min(vj)]
+                    #sm_shade_line = sm_shade_line[:min(vi), :min(vj)] # doesn't work as intended, will revisit
+                    sm_shade_line = sm_shade_line
                 # convert to binary
                 sm_shade_line[sm_shade_line > 0] = 1 
                 sm_shade_line[sm_shade_line <= 0] = 0 
@@ -338,25 +387,9 @@ for f in range(len(meta)):
     with rio.open("./example_data/shadeseen_output/" + outfn + ".tif", 'w', **metaout) as dst:
         dst.write(shade_matrix_filt[None,:,:])
 
-# =============================================================================
-# plot
-# =============================================================================
+    # 9) output plot
     if plot == 'no':
         continue
     else:
-        # plot
-        fig, [ax1, ax0] = plt.subplots(2, 1)
+        plotter(shade_matrix_filt, larf, outfn, vz_eij, vaij)
         
-        p0 = ax0.imshow(shade_matrix_filt)
-        cb0 = plt.colorbar(p0, ax = ax0)
-        p1 = ax1.imshow(larf, vmin = 0, vmax = 45)
-        ax1.text(0.03, 
-             1.03, 
-             "elev: " + str(round(vz_eij, 1)) + ", azim: " + str(round(vaij, 1)) + ", time: " + str(meta['hourpst'][f]) + ":" + str(meta['minute'][f]),
-             va = "bottom",
-             ha = "left", 
-             c = '0',
-             transform = ax1.transAxes)
-        plt.colorbar(p1, ax = ax1, label = "Height Above Ground, m")
-        plt.tight_layout()
-        plt.savefig("../plots/" + outfn + ".png", dpi = 500)

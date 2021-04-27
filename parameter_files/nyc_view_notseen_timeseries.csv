@@ -12,5 +12,5 @@ basepath,/media/vegveg/bedlam/esos/,
 buildings_only,yes,filters the dsm for only building cover (if we don't want shade from any other cover type)
 buildings_ID,5,"the value for buildings in the cover map, set if buildings_only is set to yes"
 cover,./example_data/nyc_2017_lidar_landcover_5m_utm_examplesubset.tif,"relative path for cover map, set if buildings_only is set to yes"
-plot,no,do you want to output plots?
+plot,yes,do you want to output plots?
 perpixel_angles,no,do you want per pixel indexing of zenith/azimuth angles?

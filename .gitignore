@@ -128,7 +128,8 @@ dmypy.json
 # others (added by 05michaelallen)
 .DS_Store
 .Rhistory
-/timeseries
+timeseries/
+plots/
 
 # Pyre type checker
 .pyre/
