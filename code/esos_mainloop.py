@@ -343,8 +343,10 @@ for f in range(len(meta)):
                 if (len(vi) == 0) and (len(vj) == 0):
                     sm_shade_line = sm_shade_line
                 else:
-                    #sm_shade_line = sm_shade_line[:min(vi), :min(vj)] # doesn't work as intended, will revisit
-                    sm_shade_line = sm_shade_line
+                    if (svs == 'view') and (sns == 'seen'):
+                        sm_shade_line = sm_shade_line[:min(vi), :min(vj)] 
+                    else:
+                        sm_shade_line = sm_shade_line
                 # convert to binary
                 sm_shade_line[sm_shade_line > 0] = 1 
                 sm_shade_line[sm_shade_line <= 0] = 0 
